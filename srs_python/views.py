@@ -48,26 +48,16 @@ class UserForm(forms.Form):
 def regist(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
-        username = request.POST.get('username','')
-        filterResult = User.objects.filter(username=username)
-        if len(filterResult) > 0:
-            result = "用户名已存在"
-            return JsonResponse({'result': result})
         if userform.is_valid():
             username = userform.cleaned_data['username']
             password = userform.cleaned_data['password']
             #必须使用create_user，不能使用create
-
             User.objects.create_user(username=username,password=password)
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            response = HttpResponseRedirect('/jump/')
-            response.set_cookie('username', username, 3600)
-            return response
+
+            return HttpResponse('注册成功')
     else:
         userform = UserForm()
     return render(request,'regist.html',{'userform':userform})
-
 
 def log_in(request):
     next = request.GET.get('next', '/')
@@ -245,6 +235,3 @@ def upload_ajax(request):
                 f.write(chunk)
         file_info = {'result':"上传成功"}
         return JsonResponse(file_info,content_type='json')
-
-def jump(request):
-    return render(request,'jump.html')
