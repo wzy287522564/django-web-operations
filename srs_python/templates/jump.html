@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>即将跳转至首页</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css'%}">
+    <script src="{% static 'js/jquery.min.js'%}"></script>
+</head>
+<body>
+<div class="container well" style="margin-top: 200px;width: 500px">
+
+    <span id="second">3</span>秒后将跳转至首页
+</div>
+
+</body>
+<script>
+    var s =setInterval(function(){time()},1000)
+    function time(){
+        var second = $('#second').html()
+        if(parseInt(second)>0){
+        new_second = parseInt(second)-1
+        $('#second').html(new_second)
+        }
+        else{
+            window.clearInterval(s);
+        }
+    }
+    var t =setInterval(function(){jump()},3000);
+    function jump(){
+        window.location.href='/home/'
+    }
+</script>
+</html>
