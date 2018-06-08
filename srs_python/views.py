@@ -24,44 +24,6 @@ def getData(request):
     json_self = jsonStr[u'data'][u'self']
     json_sys = jsonStr[u'data'][u'system']
     return render(request, 'srs_view.html',{'json_self':json_self.item})
-                  # {
-                  #                       #self
-                  #                       'version':json_self['version'],
-                  #                       'pid': json_self['pid'],
-                  #                       'argv':json_self['argv'],
-                  #                       'mem_kbyte':json_self['mem_kbyte'],
-                  #                       'cpu_percent':json_self['cpu_percent'],
-                  #                       'srs_uptime':json_self['srs_uptime'],
-                  #                       #system
-                  #                       'sys_cpu_percent':json_sys['cpu_percent'],
-                  #                       'disk_read_BKps':json_sys['disk_read_KBps'],
-                  #                       'disk_write_KBps':json_sys['disk_write_KBps'],
-                  #                       'disk_busy_percent':json_sys['disk_busy_percent'],
-                  #                       'mem_ram_kbyte':json_sys['mem_ram_kbyte'],
-                  #                       'mem_ram_percent':json_sys['mem_ram_percent'],
-                  #                       'mem_swap_kbyte':json_sys['mem_swap_kbyte'],
-                  #                       'mem_swap_percent':json_sys['mem_swap_percent'],
-                  #                       'cpus':json_sys['cpus'],
-                  #                       'cpus_online':json_sys['cpus_online'],
-                  #                       'uptime':json_sys['uptime'],
-                  #                       'ilde_time':json_sys['ilde_time'],
-                  #                       'load_1m':json_sys['load_1m'],
-                  #                       'load_5m':json_sys['load_5m'],
-                  #                       'load_15m':json_sys['load_15m'],
-                  #                       'net_sample_time':json_sys['net_sample_time'],
-                  #                       'net_recv_bytes':json_sys['net_recv_bytes'],
-                  #                       'net_send_bytes':json_sys['net_send_bytes'],
-                  #                       'net_recvi_bytes':json_sys['net_recvi_bytes'],
-                  #                       'net_sendi_bytes':json_sys['net_sendi_bytes'],
-                  #                       'srs_sample_time':json_sys['srs_sample_time'],
-                  #                       'srs_recv_bytes':json_sys['srs_recv_bytes'],
-                  #                       'srs_send_bytes':json_sys['srs_send_bytes'],
-                  #                       'conn_sys':json_sys['conn_sys'],
-                  #                       'conn_sys_et':json_sys['conn_sys_et'],
-                  #                       'conn_sys_tw':json_sys['conn_sys_tw'],
-                  #                       'conn_sys_udp':json_sys['conn_sys_udp'],
-                  #                       'conn_srs':json_sys['conn_srs']
-                  #                       })
 
 def get_sys_info(request):
     data = getsysinfo.collect_monitor_data()
