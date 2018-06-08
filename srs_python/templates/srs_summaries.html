@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>srs_test</title>
+</head>
+<body>
+<div>
+    <table style="border: 1px solid #aaa">
+        <tbody>
+            <tr>
+                <td style="border: 1px solid #aaa">srs_version</td>
+                <td style="border: 1px solid #aaa">{{version}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">srs_pid</td>
+                <td style="border: 1px solid #aaa">{{pid}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">argv</td>
+                <td style="border: 1px solid #aaa">{{argv}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">mem_kbyte</td>
+                <td style="border: 1px solid #aaa">{{mem_kbyte}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">cpu_percent</td>
+                <td style="border: 1px solid #aaa">{{cpu_percent}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">srs_uptime</td>
+                <td style="border: 1px solid #aaa">{{srs_uptime}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">sys_cpu_percent</td>
+                <td style="border: 1px solid #aaa">{{sys_cpu_percent}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">disk_read_BKps</td>
+                <td style="border: 1px solid #aaa">{{disk_read_BKps}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">disk_write_KBps</td>
+                <td style="border: 1px solid #aaa">{{disk_write_KBps}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">disk_busy_percent</td>
+                <td style="border: 1px solid #aaa">{{disk_busy_percent}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">mem_ram_kbyte</td>
+                <td style="border: 1px solid #aaa">{{mem_ram_kbyte}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">mem_ram_percent</td>
+                <td style="border: 1px solid #aaa">{{mem_ram_percent}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">mem_swap_kbyte</td>
+                <td style="border: 1px solid #aaa">{{mem_swap_kbyte}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">mem_swap_percent</td>
+                <td style="border: 1px solid #aaa">{{mem_swap_percent}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">cpus</td>
+                <td style="border: 1px solid #aaa">{{cpus}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">cpus_online</td>
+                <td style="border: 1px solid #aaa">{{cpus_online}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">uptime</td>
+                <td style="border: 1px solid #aaa">{{uptime}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">ilde_time</td>
+                <td style="border: 1px solid #aaa">{{ilde_time}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">load_1m</td>
+                <td style="border: 1px solid #aaa">{{load_1m}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">load_5m</td>
+                <td style="border: 1px solid #aaa">{{load_5m}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">net_sample_time</td>
+                <td style="border: 1px solid #aaa">{{net_sample_time}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">net_recv_bytes</td>
+                <td style="border: 1px solid #aaa">{{net_recv_bytes}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">net_send_bytes</td>
+                <td style="border: 1px solid #aaa">{{net_send_bytes}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">net_recvi_bytes</td>
+                <td style="border: 1px solid #aaa">{{net_recvi_bytes}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">net_sendi_bytes</td>
+                <td style="border: 1px solid #aaa">{{net_sendi_bytes}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">srs_sample_time</td>
+                <td style="border: 1px solid #aaa">{{srs_sample_time}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">srs_recv_bytes</td>
+                <td style="border: 1px solid #aaa">{{srs_recv_bytes}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">srs_send_bytes</td>
+                <td style="border: 1px solid #aaa">{{srs_send_bytes}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">conn_sys</td>
+                <td style="border: 1px solid #aaa">{{conn_sys}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">conn_sys_et</td>
+                <td style="border: 1px solid #aaa">{{conn_sys_et}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">conn_sys_tw</td>
+                <td style="border: 1px solid #aaa">{{conn_sys_tw}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">conn_sys_udp</td>
+                <td style="border: 1px solid #aaa">{{conn_sys_udp}}</td>
+            </tr>
+            <tr>
+                <td style="border: 1px solid #aaa">conn_srs</td>
+                <td style="border: 1px solid #aaa">{{conn_srs}}</td>
+            </tr>
+
+
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

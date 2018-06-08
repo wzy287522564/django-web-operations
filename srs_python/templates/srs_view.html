@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    {% load bootstrap3 %}
+    {% bootstrap_css  %}
+    {% bootstrap_javascript %}
+    <title>Srs Manage</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script type="text/javascript">
+//    $(function(){
+//        setInterval("window.location.href='http://192.168.218.124:8000/srs/'",1000);
+//    });
+</script>
+</head>
+<body role="document">
+<!--导航栏-->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div id="div1" class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/event_manage/">Srs Manage System</a>
+        </div>
+        <div id="navbar1" class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">srs 信息</a></li>
+                <li><a href="/guest_manage/">client管理</a></li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="#">{{ user }}</a></li>
+                <li><a href="/logout/">退出</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<!--发布会搜索表单-->
+<!--<div class="page-header" style="padding-top: 60px;">-->
+    <!--<div id="navbar2" class="navbar-collapse collapse">-->
+        <!--<form class="navbar-form" method="get" action="/search_name/">-->
+            <!--<div class="form-group">-->
+                <!--<input name="name" type="text" placeholder="名称" class="form-control">-->
+            <!--</div>-->
+            <!--<button type="submit" class="btn btn-success">搜索</button>-->
+        <!--</form>-->
+    <!--</div>-->
+<!--</div>-->
+<!--srs-->
+<div class="row" style="padding-top: 80px;">
+    <div class="col-md-6">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>version</th><th>pid</th><th>argv</th><th>mem_kbyte</th><th>cpu_percent</th><th>srs_uptime</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% key,value in for json_self %}
+            <tr>
+                <td>key</td>
+                <td>value</td>
+                <!--<td>{{version}}</td>-->
+                <!--<td>{{pid}}</td>-->
+                <!--<td>{{argv}}</td>-->
+                <!--<td>{{mem_kbyte}}</td>-->
+                <!--<td>{{cpu_percent}}</td>-->
+                <!--<td>{{srs_uptime}}</td>-->
+            </tr>
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</div>
+<!--system-->
+<div class="row" style="padding-top: 80px;">
+    <div class="col-md-6">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>sys_cpu_percent</th><th>disk_read_BKps</th><th>disk_write_KBps</th><th>disk_busy_percent</th><th>mem_ram_kbyte</th><th>mem_ram_percent</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{sys_cpu_percent}}</td>
+                <td>{{disk_read_BKps}}</td>
+                <td>{{disk_write_KBps}}</td>
+                <td>{{disk_busy_percent}}</td>
+                <td>{{mem_ram_kbyte}}</td>
+                <td>{{mem_ram_percent}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

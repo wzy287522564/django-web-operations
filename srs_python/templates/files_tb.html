@@ -1,0 +1,84 @@
+<div>
+    <span>当前路径：<a id="now_path">{{file.now_path}}</a></span>
+    <span style="padding-right: 10px;cursor:pointer" onclick="back_()">返回上一级</span>
+</div>
+<div>
+    <span id="create" style="padding-right: 10px;cursor:pointer" onclick="create()">新建文件</span>
+    <span id="delChecked" style="padding-right: 10px;cursor:pointer" onclick="delChecked()">删除选中</span>
+<div>
+        <input type="file" name="file" id="file_upload">
+        <input type="button" value="上传" onclick="FileUpload()">
+</div>
+</div>
+<table border="1" width="100%" >
+    <thead>
+        <tr>
+            <th width="50px"><center><input type="checkbox" id="allCheck" onclick="checkAll()" ><a>全选</a></center></th>
+            <th>文件名</th>
+            <th>最后修改时间</th>
+            <th>文件类型</th>
+            <th>文件大小</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for key,value in file.items %}
+        <tr onmouseover="style.backgroundColor='#b0bae8'" onmouseout="style.backgroundColor='#FFFFFF'">
+        {% ifnotequal key "now_path" %}
+            <td width="50px"><center><input name="checkbox" type="checkbox" value="{{key}}"></center></td>
+            <td>
+                {% ifequal value.type 'directory'%}
+                <a style="color:blue;text-decoration:underline;cursor:pointer;" onclick="enter_directory()">{{key}}</a>
+                {% else %}
+                <a>{{key}}</a>
+                {% endifequal %}
+            </td>
+            <td>{{value.mtime}}</td>
+            <td class="{{valuetype}}" title="{{value.type}}" style="text-align:right;">{{value.type}}</td>
+            <td style="text-align:right;">{{value.size}} bit</td>
+            <td width="161px">
+              <div id="{{key}}">
+                  <span style="padding-right: 10px;cursor:pointer" onclick="del()">删除</span>
+                  <span style="padding-right: 10px;cursor:pointer" onclick="move()">移动</span>
+                  <span style="padding-right: 10px;cursor:pointer" onclick="rename()">重命名</span>
+              </div>
+            </td>
+        {% endifnotequal %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<script>
+$(document).ready(function() {
+        var sort_direction=1; //排序标志，1为升序，-1为降序
+        $('th').each(function(i) {
+            $(this).click(function() {
+                if(sort_direction==1) {
+                    sort_direction=-1;
+                }
+                else {
+                    sort_direction=1;
+                }
+                //获得行数组
+                var trarr=$('table').find('tbody > tr').get();
+                //数组排序
+                trarr.sort(function(a, b) {
+                    var col1=$(a).children('td').eq(i).text().toUpperCase();
+                    var col2=$(b).children('td').eq(i).text().toUpperCase();
+                    return(col1 < col2) ? -sort_direction: (col1 > col2) ? sort_direction: 0;
+
+                }
+                );
+                $.each(trarr, function(i, row) {
+                    //将排好序的数组重新填回表格
+                    $('tbody').append(row);
+                }
+                );
+            }
+            );
+        }
+        );
+
+});
+</script>

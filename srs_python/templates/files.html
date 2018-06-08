@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% block title %}filelist{% endblock %}
+{% block content %}
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">文件列表</h3>
+    </div>
+    <div id="files_tb" class="panel-body">
+            {% include 'files_tb.html' %}
+    </div>
+</div>
+
+{% endblock %}
+{% block script %}
+<script>
+$.ajaxSetup({
+    data: {csrfmiddlewaretoken: '{{ csrf_token }}' },
+});
+
+function back_(){
+    var path=document.getElementById('now_path').text
+    var a=path.split('\\')
+    var now_directory=a[a.length-1]
+    var re =new RegExp('(.*)'+now_directory);
+    path=path.replace(re,'$1')
+    $.post('/files/file_table_html/',{'new_path':path}).done(function(html){
+            $('#files_tb').html(html['content_html'])
+        })
+}
+
+function del(){
+    var file_name=new Array()
+    file_name[0]=event.srcElement.parentElement.id
+    a=confirm("确定要删除"+file_name+"吗")
+    if(a)
+    {
+        $.post('/files/del/',{'file_name[]':file_name}).done(function(data){
+            alert(data['result'])
+            refresh_tb()
+
+        })
+    }
+}
+function move(){
+    alert('move')
+}
+
+
+function rename()
+{
+    var a=prompt('请输入重命名：','')
+    if(a){
+    var reg=/(^\s+)|(\s+$)|\s+/g;
+        if(reg.test(a)){
+            alert("文件名不能包含空格")
+        }
+        else
+        {
+            file_name=event.srcElement.parentElement.id
+            var path=document.getElementById('now_path').text
+            new_name=a
+            $.post('/files/rename/',{'file_name':file_name,'new_name':new_name}).done(function(data){
+                alert(data['result']);
+                if(data['result'] == '成功重命名'){
+                    refresh_tb()
+                }
+            })
+        }
+    }
+    else
+    {
+        alert("文件名不能为空！")
+    }
+
+}
+
+function enter_directory()
+{
+    directory_name=event.srcElement.innerText
+    path=$('#now_path').text()
+    new_path=path+'\\'+directory_name
+    $.post('/files/file_table_html/',{'new_path':new_path}).done(function(html){
+        $('#files_tb').html(html['content_html'])
+    })
+}
+
+$(document).ready(function() {
+    $('#files').attr('class','active')
+    $('#2bread').find('a').html('文件管理')
+    $('#2bread').find('a').attr('href','/files/')
+
+})
+
+function refresh_tb(){
+    var path=document.getElementById('now_path').text;
+    $.post('/files/file_table_html/',{'new_path':path}).done(function(html){
+        $('#files_tb').html(html['content_html']);
+
+    })
+}
+
+function create(){
+    popWin.showWin('800','600','新建','/create/');
+}
+
+function checkAll(){
+    var all=document.getElementById('allCheck');
+    var one=document.getElementsByName('checkbox');
+    console.log(one)
+    for(var i=0;i<one.length;i++)
+    {
+        one[i].checked=all.checked
+    }
+}
+
+function delChecked(){
+   a=confirm("确定要删除所有选中文件吗")
+    if(a)
+    {
+        var del_list= new Array()
+        $('input[name="checkbox"]').each(function(){
+            if($(this)[0].checked)
+            {
+                del_list.push($(this).val())
+            }
+        })
+        if(del_list.length != 0)
+        {
+            $.post('/files/del/',{'file_name[]':del_list}).done(function(data){
+                alert(data['result'])
+                refresh_tb()
+        })
+        }
+        else
+        {
+            alert("请选择要删除的文件或目录!")
+        }
+    }
+}
+
+function FileUpload() {
+    var form_data = new FormData();
+    var file_info =$( '#file_upload')[0].files[0];
+    form_data.append('file',file_info);
+    if(file_info==undefined)
+    {
+        alert('你没有选择任何文件');
+        return false
+    }
+    $.ajax({
+        url:'/files/upload_ajax/',
+        type:'POST',
+        data: form_data,
+        processData: false,  // tell jquery not to process the data
+        contentType: false, // tell jquery not to set contentType
+        success: function(result) {
+            alert(result['result']);
+            refresh_tb();
+        }
+    });
+}
+</script>
+{% endblock %}
+

@@ -1,0 +1,286 @@
+{% extends 'base.html' %}
+{% block content %}
+    <!--服务器信息-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">系统:{{data.ip}}</h3>
+            </div>
+            <div class="panel-body">
+                <p>服务器开机时间：{{data.boot_time}}</p>
+                <p>已持续运行：<a id="run_time">{{data.run_time}}</a></p>
+            </div>
+        </div>
+        <!--分割线-->
+        <div class="line"></div>
+        <!--比例图面板-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">服务器状态</h3>
+            </div>
+            <div class="panel-body">
+                <ul class="row">
+                    <!--比例图-->
+                    <li id="cpu" class="list-unstyled col-xs-6 col-sm-3 col-md-3 col-lg-2" style="text-align: center">
+                        <div class="row">
+                            <h5>CPU使用率</h5>
+                        </div>
+                        <div class="row">
+                            <canvas id="cpu_percent" class="process" width="100px" height="100px">{{data.cpu_percent}}</canvas>
+                        </div>
+                        <div class="row">
+                            <h5>核心数:{{data.cpu_count}}</h5>
+                        </div>
+                    </li>
+                    <li id="mem" class="list-unstyled col-xs-6 col-sm-3 col-md-3 col-lg-2" style="text-align: center">
+                        <div class="row">
+                            <h5>内存使用率</h5>
+                        </div>
+                        <div class="row">
+                            <canvas id="mem_percent" class="process" width="100px" height="100px">{{data.mem_percent}}</canvas>
+                        </div>
+                        <div class="row">
+                            <h5 id="mem_">{{data.mem_used}}/{{data.mem_total}}</h5>
+                        </div>
+                    </li>
+                    <li id="disk" class="list-unstyled col-xs-6 col-sm-3 col-md-3 col-lg-2" style="text-align: center">
+                        <div class="row">
+                            <h5>磁盘使用率 （/）</h5>
+                        </div>
+                        <div class="row" style="padding: 0 20px">
+                            <canvas id="disk_percent" class="process" width="100px" height="100px">{{data.disk_percent}}</canvas>
+                        </div>
+                        <div class="row">
+                            <h5 id="disk_">{{data.disk_used}}/{{data.disk_total}}</h5>
+                        </div>
+                    </li>
+                    <li id="vod" class="list-unstyled col-xs-6 col-sm-3 col-md-3 col-lg-2" style="text-align: center">
+                        <div class="row">
+                            <h5>D:\</h5>
+                        </div>
+                        <div class="row">
+                            <canvas id="vod_percent" class="process" width="100px" height="100px">{{data.vod_percent}}</canvas>
+                        </div>
+                        <div class="row">
+                            <h5 id="vod_">{{data.vod_used}}/{{data.vod_total}}</h5>
+                        </div>
+                    </li>
+                    <li id="boot" class="list-unstyled col-xs-6 col-sm-3 col-md-3 col-lg-2" style="text-align: center">
+                        <div class="row">
+                            <h5>C:\</h5>
+                        </div>
+                        <div class="row">
+                            <canvas id="boot_percent" class="process" width="100px" height="100px">{{data.boot_percent}}</canvas>
+                        </div>
+                        <div class="row">
+                            <h5 id="boot_">{{data.boot_used}}/{{data.boot_total}}</h5>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!--分割线-->
+        <div class="line"></div>
+        <!--网络信息-->
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h3 class="panel-title">网络使用情况</h3>
+            </div>
+            <div class="panel-body">
+                <div id="main" style="width:900px;height:600px;"></div>
+            </div>
+        </div>
+{% endblock %}
+
+{% block script %}
+<script>
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'),'light');
+    var date=['{{data.now_time}}']
+    var recvArry=[0,0];
+    var recv = [recvArry[1]-recvArry[0]]
+    <!--var recv=[{{data.net_recv}}]-->
+    var sentArry=[0,0]
+    var sent = [sentArry[1]-sentArry[0]]
+    <!--var sent=[{{data.net_sent}}]-->
+        // 指定图表的配置项和数据
+        var option = {
+    title: {
+        text: '网络流量'
+    },
+    tooltip : {
+        trigger: 'axis',
+        axisPointer: {
+            type: 'cross',
+            label: {
+                backgroundColor: '#6a7985'
+            }
+        }
+    },
+    legend: {
+        data:['net_recv','net_sent']
+    },
+    <!--toolbox: {-->
+        <!--feature: {-->
+            <!--saveAsImage: {}-->
+        <!--}-->
+    <!--},-->
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : date
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value',
+            boundaryGap: [0, '50%'],
+        }
+    ],
+    series : [
+        {
+            name:'net_recv',
+            type:'line',
+            stack: '总量',
+            smooth:true,
+            areaStyle: {normal: {}},
+            data:recv
+        },
+        {
+            name:'net_sent',
+            type:'line',
+            stack: '总量',
+            smooth:true,
+            areaStyle: {normal: {}},
+            data:sent
+        }
+    ]
+};
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+
+    function drawProcess() {
+    // 选出页面上所有class为process的canvas元素,然后迭代每一个元素画图(这里用Jquery的选择器选的)
+    $('canvas.process').each(function() {
+        // 第一部先拿到canvas标签中间的文字,就是那个61%
+        var process = parseFloat($(this).text());
+
+        // 一个canvas标签
+        var canvas = this;
+        // 拿到绘图上下文,目前只支持"2d"
+        var context = canvas.getContext('2d');
+        // 将绘图区域清空,如果是第一次在这个画布上画图,画布上没有东西,这步就不需要了
+        context.clearRect(0, 0, 100, 100);
+
+        // ***开始画一个灰色的圆
+        context.beginPath();
+        // 坐标移动到圆心
+        context.moveTo(50, 50);
+        // 画圆,圆心是24,24,半径24,从角度0开始,画到2PI结束,最后一个参数是方向顺时针还是逆时针
+        context.arc(50, 50, 50, 0, Math.PI * 2, false);
+        context.closePath();
+        // 填充颜色
+        context.fillStyle = '#ddd';
+        context.fill();
+        // ***灰色的圆画完
+
+        // 画进度
+        context.beginPath();
+        // 画扇形的时候这步很重要,画笔不在圆心画出来的不是扇形
+        context.moveTo(50, 50);
+        // 跟上面的圆唯一的区别在这里,不画满圆,画个扇形
+        context.arc(50, 50, 50, Math.PI*3/2, Math.PI * 2 * process / 100 + Math.PI*3/2, false);
+        context.closePath();
+        context.fillStyle = '#20a53a';
+        context.fill();
+
+        // 画内部空白
+        context.beginPath();
+        context.moveTo(50, 50);
+        context.arc(50, 50, 40, 0, Math.PI * 2, true);
+        context.closePath();
+        context.fillStyle = 'rgba(255,255,255,1)';
+        context.fill();
+
+        // 画一条线
+        context.beginPath();
+        context.arc(50, 50, 35, 0, Math.PI * 2, true);
+        context.closePath();
+        // 与画实心圆的区别,fill是填充,stroke是画线
+        context.strokeStyle = '#ddd';
+        context.stroke();
+
+        //在中间写字
+        context.font = "bold 15pt Arial";
+        context.fillStyle = '#20a53a';
+        context.textAlign = 'center';
+        context.textBaseline = 'middle';
+        context.moveTo(50, 50);
+        context.fillText(process+'%', 50, 50);
+    })
+    }
+drawProcess()
+    var t =setInterval(function(){reload()},3000);
+    function reload() {
+        $.get('/test2/').done(function(data1){
+            var _html_cpu = data1['cpu_percent'];
+            var _html_mem = data1['mem_percent'];
+            var _html_mem_ = data1['mem_used'] + '/' + data1['mem_total'];
+            var _html_disk = data1['disk_percent'];
+            var _html_disk_ = data1['disk_used'] + '/' + data1['disk_total'];
+            var _html_vod = data1['vod_percent'];
+            var _html_vod_ = data1['vod_used'] + '/' + data1['vod_total'];
+            var _html_boot = data1['boot_percent'];
+            var _html_boot_ = data1['boot_used'] + '/' + data1['boot_total'];
+            var _html_boot_runtime = data1['run_time']
+            var _net_sent = data1['net_sent']
+            var _net_recv = data1['net_recv']
+            $("#cpu_percent").html(_html_cpu);
+            $("#mem_percent").html(_html_mem);
+            $("#mem_").html(_html_mem_);
+            $("#disk_percent").html(_html_disk);
+            $("#disk_").html(_html_disk_);
+            $("#vod_percent").html(_html_vod);
+            $("#vod_").html(_html_vod_);
+            $("#boot_percent").html(_html_boot);
+            $("#boot_").html(_html_boot_);
+            $("#run_time").html(_html_boot_runtime);
+            drawProcess();
+            recvArry[0]=recvArry[1]
+            recvArry[1]=data1['net_recv']
+            sentArry[0]=sentArry[1]
+            sentArry[1]=data1['net_sent']
+            date.push(data1['now_time'])
+            recv.push(recvArry[1]-recvArry[0])
+            sent.push(sentArry[1]-sentArry[0])
+            myChart.setOption({
+                xAxis:{
+                    data:date
+                },
+                series : [
+                {
+                    name:'net_recv',
+                    data:recv
+                },
+                {
+                    name:'net_sent',
+                    data:sent
+                }
+                ]
+            });
+
+        })
+    }
+$(document).ready(function() {
+    $('#home').attr('class','active')
+})
+</script>
+{% endblock %}
