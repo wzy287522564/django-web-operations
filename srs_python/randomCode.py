@@ -1,6 +1,7 @@
 # encoding: utf-8
 from PIL import Image,ImageFilter,ImageDraw,ImageFont
 import random
+from srs_admin import settings
 
 class randomCode():
     def __init__(self):
@@ -29,15 +30,18 @@ class randomCode():
 
     #设置干扰线，红色
     def gene_line(self,draw,width,height):
+        # 随机生成begin坐标
          begin = (random.randint(0, width), random.randint(0, height))
+        # 随机生成end坐标
          end = (random.randint(0, width), random.randint(0, height))
+         #用红色画线，一条从begin到end的直线
          draw.line([begin, end], fill = (255,0,0))
 
     def main(self):
         w = 240
         h = 60
         im = Image.new('RGB', (w, h), (255, 255, 255))
-        font = ImageFont.truetype(r'C:/Users/Administrator/Desktop/srs_admin/static/fonts/Arial.ttf', 36)
+        font = ImageFont.truetype(settings.STATICFILES_DIRS[0]+'/fonts/Arial.ttf', 36)
         draw = ImageDraw.Draw(im)
 
         for x in range(w):
@@ -53,9 +57,9 @@ class randomCode():
 
 
         self.gene_line(draw,w,h)
-
+        #图像模糊
         image = im.filter(ImageFilter.BLUR)
-        image.save(r'C:/Users/Administrator/Desktop/srs_admin/static/image/'+self.name)
+        image.save(settings.STATICFILES_DIRS[0]+'/image/'+self.name)
 
 if __name__ == '__main__':
     r = randomCode()
