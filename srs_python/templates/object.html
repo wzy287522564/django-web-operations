@@ -3,13 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <script src="/static/js/jquery.min.js"></script>
 </head>
 <body>
-{% for key,value in file.items %}
-    <span>{{key}}</span>
-    {% ifnotequal key 'now_path' %}
-    <span>{{value.size}}</span>
-    {% endifnotequal %}
-{% endfor %}
+
 </body>
 </html>

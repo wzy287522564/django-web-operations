@@ -1,20 +1,22 @@
 #coding:utf-8
 from __future__ import unicode_literals
 
+import shutil
+import os
+import time
 from django.shortcuts import render,render_to_response
 from urllib2 import urlopen
-import json
 from django.contrib.auth.models import User
 import json
 from django.http import HttpResponse,JsonResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
-import getsysinfo
-import os
-import time
+from django.core.cache import cache
 from django.template.loader import get_template
+from django.template import RequestContext
 from django import forms
-import shutil
+import getsysinfo
+import randomCode
 # Create your views here.
 
 def getData(request):
@@ -45,6 +47,7 @@ class UserForm(forms.Form):
     password = forms.CharField(label="密码",widget=forms.PasswordInput())
 
 
+
 def regist(request):
     if request.method == 'POST':
         userform = UserForm(request.POST)
@@ -64,19 +67,31 @@ def regist(request):
             response = HttpResponseRedirect('/jump/')
             response.set_cookie('username', username, 3600)
             return response
-    else:
-        userform = UserForm()
-    return render(request,'regist.html',{'userform':userform})
+    return render(request,'regist.html')
 
 
 def log_in(request):
     next = request.GET.get('next', '/')
+    #生成随机验证码
+    verify_code_image = randomCode.randomCode()
+    verify_code_image.main()
+    verify_code_image_key=verify_code_image.name
+    verify_code_image_value=verify_code_image.key
+    cache.set(verify_code_image_key,verify_code_image_value,30)
+
     if request.method == 'POST':
         userform = UserForm(request.POST)
+        #从POST中获取用户提交的验证码
+        verify_code = request.POST.get('verify_code','')
+        #从POST中获取验证码的verify_code_image_key也就是image_name
+        cache_key = request.POST.get('verify_code_image_key', '')
+        #从缓存中获得key为verify_code_image_key的value
+        cache_value = cache.get(cache_key)
+        if verify_code != cache_value:
+            return render(request, 'login.html', {'error': '验证码错误', 'image_name': verify_code_image_key})
         if userform.is_valid():
             username = userform.cleaned_data['username']
             password = userform.cleaned_data['password']
-
             # user = User.objects.filter(username__exact=username,password__exact=password)
             user = authenticate(username=username,password=password)
             if user:
@@ -88,10 +103,8 @@ def log_in(request):
                 response.set_cookie('username',username,3600)
                 return response
             else:
-                return render(request, 'login.html', {'userform': userform,'error':'用户名或密码错误，请重新登陆'})
-    else:
-        userform = UserForm()
-    return render(request,'login.html',{'userform':userform,'next':next})
+                return render(request, 'login.html', {'error':'用户名或密码错误，请重新登陆','image_name':verify_code_image_key})
+    return render(request,'login.html',{'next':next,'image_name':verify_code_image_key})
 
 def log_out(request):
      logout(request)
