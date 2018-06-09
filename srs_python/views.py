@@ -87,6 +87,8 @@ def log_in(request):
         cache_key = request.POST.get('verify_code_image_key', '')
         #从缓存中获得key为verify_code_image_key的value
         cache_value = cache.get(cache_key)
+        if not cache_value:
+            return render(request, 'login.html', {'error': '验证码超时', 'image_name': verify_code_image_key})
         if verify_code != cache_value:
             return render(request, 'login.html', {'error': '验证码错误', 'image_name': verify_code_image_key})
         if userform.is_valid():
