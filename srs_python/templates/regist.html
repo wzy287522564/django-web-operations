@@ -19,16 +19,32 @@
         <div class="form-group" id="username_div">
             <label for="username" class="col-sm-3 control-label">账&nbsp号</label>
             <div class="col-sm-7">
-                <input type="text" class="form-control" id="username" name="username" PLACEHOLDER="请输入手机号">
+                <input type="text" class="form-control" id="username" name="username" PLACEHOLDER="请输入手机号" AUTOCOMPLETE="off">
                 <span class="glyphicon glyphicon-ok form-control-feedback" style="display:none" id="username_success"></span>
                 <span class="glyphicon glyphicon-remove form-control-feedback" style="display:none" id="username_fail"></span>
                 <span id="username_result" style="display:none;padding-right: 120px;"></span>
             </div>
         </div>
+        <div class="form-group" id="email_div">
+            <label for="password" class="col-sm-3 control-label">邮&nbsp箱</label>
+            <div class="col-sm-7">
+                <input type="text" class="form-control" id="email" name="email" PLACEHOLDER="请输入邮箱地址" AUTOCOMPLETE="off">
+                <span class="glyphicon glyphicon-ok form-control-feedback" style="display:none" id="email_success"></span>
+                <span class="glyphicon glyphicon-remove form-control-feedback" style="display:none" id="email_fail"></span>
+                <span id="email_result" style="display:none;padding-right: 120px;"></span>
+            </div>
+        </div>
+        <div class="form-group">
+           <label for="verify_code" class="col-sm-3 control-label">验证码</label>
+           <div class="col-sm-4">
+               <input type="text" class="form-control" id="verify_code" name="verify_code" placeholder="请输入验证码" AUTOCOMPLETE="off">
+           </div>
+            <button id="verify_code_button" name="verify_code_button" type="button" class="col-sm-3 btn btn-primary btn-sm" style="width: 107px;padding-left: 5px;padding-right: 5px;padding-top: 9px;">发送验证码至邮箱</button>
+        </div>
         <div class="form-group" id="password_div">
             <label for="password" class="col-sm-3 control-label">密&nbsp码</label>
             <div class="col-sm-7">
-                <input type="password" class="form-control" id="password" name="password" PLACEHOLDER="请输入至少6位密码">
+                <input type="password" class="form-control" id="password" name="password" PLACEHOLDER="请输入至少6位密码" AUTOCOMPLETE="off">
                 <span class="glyphicon glyphicon-ok form-control-feedback" style="display:none" id="password_success"></span>
                 <span class="glyphicon glyphicon-remove form-control-feedback" style="display:none" id="password_fail"></span>
                 <span id="password_result" style="display:none;padding-right: 120px;"></span>
@@ -37,12 +53,13 @@
         <div class="form-group" id="password2_div">
             <label for="password2" class="col-sm-3 control-label">确认密码</label>
             <div class="col-sm-7">
-                <input type="password" class="form-control" id="password2" name="password2" PLACEHOLDER="请再一次输入密码">
+                <input type="password" class="form-control" id="password2" name="password2" PLACEHOLDER="请再一次输入密码" AUTOCOMPLETE="off">
                 <span class="glyphicon glyphicon-ok form-control-feedback" style="display:none" id="password2_success"></span>
                 <span class="glyphicon glyphicon-remove form-control-feedback" style="display:none" id="password2_fail"></span>
                 <span id="password2_result" style="display:none;"></span>
             </div>
         </div>
+        <span>{{error}}</span>
         <button type="submit" class="btn btn-primary center-block">注册</button>
         <div class="text-right">
             <a href="/login/" >已有账号</a>
@@ -93,6 +110,50 @@ $("#username").blur(function(){
             $("#username_result").html('用户名不能为空')
         }
 });
+
+$("#email").blur(function(){
+    var email = $(this).val()
+    if(email.length!=0){
+         var emailreg = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+         if(emailreg.test(email)){
+            $("#email_div").attr("class","form-group has-success has-feedback")
+            $("#email_success").attr("style","")
+            $("#email_fail").attr("style","display:none")
+            $("#email_result").attr("style","display:none")
+            $("#email_result").html('')
+         }
+         else{
+            $("#email_div").attr("class","form-group has-error has-feedback")
+            $("#email_fail").attr("style","")
+            $("#email_success").attr("style","display:none")
+            $("#email_result").attr("style","padding-right: 120px;")
+            $("#email_result").html('请输入有效的邮箱')
+         }
+    }
+    else{
+        $("#email_div").attr("class","form-group has-error has-feedback")
+        $("#email_fail").attr("style","")
+        $("#email_success").attr("style","display:none")
+        $("#email_result").attr("style","padding-right: 120px;")
+        $("#email_result").html('邮箱不能为空')
+    }
+})
+
+var btn= document.getElementById("verify_code_button");
+btn.onclick=function(){
+    var email = $('#email').val()
+    var result = $('#email_result').html()
+    if(result.length!=0 || email.length==0){
+        return
+    }
+    else{
+        $.post('/regist/send_verify_code_to_email/',{'email':email}).done(function(){
+            $('#verify_code_button').html('已发送，120秒有效')
+            $('#verify_code_button').attr('disabled','disabled')
+            $('#verify_code_button').attr('style','width: 107px;padding-right: 5px;padding-top: 9px;padding-left: 0px;')
+        })
+    }
+}
 
 $("#password").blur(function(){
     var password  = $("#password").val()

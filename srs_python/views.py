@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 import shutil
 import os
 import time
+from srs_admin import settings
 from django.shortcuts import render,render_to_response
 from urllib2 import urlopen
 from django.contrib.auth.models import User
@@ -12,6 +13,7 @@ from django.http import HttpResponse,JsonResponse,HttpResponseRedirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib.auth.decorators import login_required
 from django.core.cache import cache
+from django.core.mail import send_mail
 from django.template.loader import get_template
 from django.template import RequestContext
 from django import forms
@@ -46,22 +48,32 @@ class UserForm(forms.Form):
     username = forms.CharField(label="账号",max_length=50)
     password = forms.CharField(label="密码",widget=forms.PasswordInput())
 
+class UserRegist(UserForm):
+    email = forms.EmailField(label="邮箱")
 
 
 def regist(request):
     if request.method == 'POST':
-        userform = UserForm(request.POST)
+        userrgist = UserRegist(request.POST)
         username = request.POST.get('username','')
+        verify_code=request.POST.get('verify_code','')
         filterResult = User.objects.filter(username=username)
+
         if len(filterResult) > 0:
             result = "用户名已存在"
             return JsonResponse({'result': result})
-        if userform.is_valid():
-            username = userform.cleaned_data['username']
-            password = userform.cleaned_data['password']
+        if userrgist.is_valid():
+            username = userrgist.cleaned_data['username']
+            password = userrgist.cleaned_data['password']
+            email = userrgist.cleaned_data['email']
             #必须使用create_user，不能使用create
+            if cache.get(email)!=verify_code:
+                print cache.get(email)
+                error="验证码错误"
+                return render(request,'regist.html',{'error':error})
 
-            User.objects.create_user(username=username,password=password)
+
+            User.objects.create_user(username=username,password=password,email=email)
             user = authenticate(username=username, password=password)
             login(request, user)
             response = HttpResponseRedirect('/jump/')
@@ -266,3 +278,11 @@ def upload_ajax(request):
 
 def jump(request):
     return render(request,'jump.html')
+
+def send_verify_code_to_email(request):
+    email=request.POST.get('email','')
+    r=randomCode.randomCode()
+    code = r.name.split('.')[0]
+    cache.set(email,code,120)
+    send_mail('test','您的验证码为：'+code+',120秒有效',settings.DEFAULT_FROM_EMAIL,[email])
+    return JsonResponse({'result':'success'})

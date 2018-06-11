@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^test2/$',p_views.get_sys_info2),
     url(r'^home/$',p_views.index,name='index'),
     url(r'^regist/$',p_views.regist,name='regist'),
+    url(r'^regist/send_verify_code_to_email/$',p_views.send_verify_code_to_email,name='send_verify_code_to_email'),
     url(r'^jump/$',p_views.jump,name='jump'),
     url(r'^login/$',p_views.log_in,name='login'),
     url(r'^logout/$',p_views.log_out,name='logout'),
