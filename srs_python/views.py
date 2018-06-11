@@ -71,6 +71,9 @@ def regist(request):
 
 
 def log_in(request):
+    #如果用户已登录，则直接跳转home页
+    if request.user.is_authenticated():
+        return HttpResponseRedirect('/home/')
     next = request.GET.get('next', '/')
     #生成随机验证码
     verify_code_image = randomCode.randomCode()
