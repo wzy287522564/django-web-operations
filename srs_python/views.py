@@ -68,11 +68,8 @@ def regist(request):
             email = userrgist.cleaned_data['email']
             #必须使用create_user，不能使用create
             if cache.get(email)!=verify_code:
-                print cache.get(email)
                 error="验证码错误"
                 return render(request,'regist.html',{'error':error})
-
-
             User.objects.create_user(username=username,password=password,email=email)
             user = authenticate(username=username, password=password)
             login(request, user)
