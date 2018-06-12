@@ -110,7 +110,7 @@ def log_in(request):
             user = authenticate(username=username,password=password)
             if user:
                 login(request, user)
-                if len(next)==0:
+                if next!='/':
                     response = HttpResponseRedirect(next)
                 else:
                     response = HttpResponseRedirect('/home/')
@@ -170,7 +170,6 @@ def files(request,path='C:/Users/Administrator/Desktop/srs_admin/'):
         file1[i] = file(name, size, mtime, type)
     file1['now_path']=os.getcwd()
     return render(request,'files.html',{'file':file1,'username':username})
-
 
 def file_table_html(request):
     if request.method == 'POST':
